@@ -1,0 +1,18 @@
+version: '3.8'
+services:
+  rabbitmq:
+    container_name: queue-with-rabbitmq
+    image: rabbitmq:3-management-alpine
+    hostname: rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - rmq-data:/var/lib/rabbitmq/
+      - rmq-log:/var/log/rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: 'admin'
+      RABBITMQ_DEFAULT_PASS: 'admin'
+volumes:
+  rmq-data:
+  rmq-log:
