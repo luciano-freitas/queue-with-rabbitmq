@@ -7,6 +7,7 @@ app.use(express.json())
 const PORT = 9005
 const URL_HOST = 'amqp://admin:admin@localhost:5672'
 const QUEUE_NAME = 'order'
+let count = 1;
 
 let channel
 connect()
@@ -23,16 +24,17 @@ async function connect() {
 
 app.post('/orders', (req, res) => {
   const data = req.body
+  const send = JSON.stringify({
+    ...data,
+    count: count++,
+    orderId: Date.now(),
+    date: new Date(),
+  })
 
+  console.log('PEDIDO ENVIADO:', send)
   channel.sendToQueue(
     QUEUE_NAME,
-    Buffer.from(
-      JSON.stringify({
-        ...data,
-        orderId: Date.now(),
-        date: new Date(),
-      }),
-    ),
+    Buffer.from(send),
   )
 
   res.json({
